@@ -1,0 +1,8 @@
+* <2011-07-17 Sun>
+** Done/Todo
+   - [X] Created skeleton
+   - [X] Managed to create slides
+   - [ ] How to set variables, like author?
+   - [ ] Create various themes.
+   - [ ] Set theme variables
+   
