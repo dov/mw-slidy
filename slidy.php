@@ -20,7 +20,7 @@
 /**
  * Extension to create slidy show
  *
- * @author TooooOld <tianshuen@gmail.com>
+ * @author Dov Grobgeld <dov.grobgeld@gmail.com>
  * @package MediaWiki
  * @subpackage Extensions
  */
@@ -31,7 +31,7 @@ if( !defined( 'MEDIAWIKI' ) ) {
 
 define( 'SLIDY_INC_MARK', 	'(step)' );
 define( 'SLIDY_PAGE_BREAK', '\\\\\\\\' );
-$ce_slidy_tpl_file 	= "./extensions/mw-slidy/slidy.htm";
+$slidy_tpl_file 	= "./extensions/mw-slidy/slidy.htm";
 
 $wgExtensionFunctions[] = 'setupSlidyShow';
 
@@ -41,15 +41,14 @@ function setupSlidyShow() {
 
     $wgParser->setHook( 'slidy', 'renderSlidy' );
 
-	$ce_gen			= $wgRequest->getText('ce_gen', false);
-	$ce_slidy_title   = $wgRequest->getText('title', false);
+	$slidy_title   = $wgRequest->getText('title', false);
 
-	$ce_slidy		= $wgRequest->getText('ce_slidy', false);
-	$ce_slidy_style	= $wgRequest->getText('ce_style', false);
+	$slidy		= $wgRequest->getText('slidy', false);
+	$slidy_style	= $wgRequest->getText('style', false);
 
-	if($ce_slidy){
-		$ceTitle =& Title::newFromURL($ce_slidy_title);
-		$slidyShow = new slidyShow($ceTitle, $ce_slidy_style);
+	if($slidy){
+		$ceTitle =& Title::newFromURL($slidy_title);
+		$slidyShow = new slidyShow($ceTitle, $slidy_style);
 
 		$slidyShow->genSlidyFile();
 	}
@@ -59,12 +58,13 @@ function renderSlidy( $style = 'default',$args = null, $parser = null ) {
 
  	global $wgTitle, $wgScriptPath;
 
+    print "wgTitle<br/>\n";
 	if(is_object($wgTitle)){
         $slidyShow = new slidyShow($wgTitle, $style, $args);
-		$url = $wgTitle->escapeLocalURL("ce_style=$style&ce_slidy=true");
+		$url = $wgTitle->escapeLocalURL("style=$style&slidy=true");
 		return '<div class="floatright"><span>
 				<a href="'.$url.'" class="image" title="Slidy Show" target="_blank">
-				<img src="'.$wgScriptPath.'/extensions/slidy/'.$slidyShow->style.'/'.$slidyShow->style.'.gif" alt="Slidy Show" width="240px" /><br />
+				<br />
 				Slidy Show</a></span></div>';
 	}else{
 		return "this is a slidy show page.\n";
@@ -88,10 +88,6 @@ class slidyShow
 			$this->mContent = $slidyArticle->getContent(0);
 			$this->setStyle($style);
 			$this->slidyParser();
-            
-            if (!isset( $args["author"] ) ) { $args["author"] = "Foo Bar"; }
-            $this->author = $args["author"];
-
 		}else{
 			wfDebug("Slidy: Error! Pass a title object, NOT a title string!\n");
 		}
@@ -120,7 +116,7 @@ class slidyShow
 	}
 
 	function genSlidyFile(){
-		global $ce_slidy_tpl_file, $ce_file_dir, $ce_slidy_tpl,
+		global $slidy_tpl_file, $file_dir, $slidy_tpl,
 				$wgUser, $wgContLang, $wgOut;
 
 	 	if(empty($this->mSlidys)){
@@ -128,8 +124,8 @@ class slidyShow
 	 	}
 
 		#get template
-		$ce_slidy_tpl = @file_get_contents($ce_slidy_tpl_file);
-		if( '' == $ce_slidy_tpl ){
+		$slidy_tpl = @file_get_contents($slidy_tpl_file);
+		if( '' == $slidy_tpl ){
 
 			return false;
 		}
@@ -141,7 +137,8 @@ class slidyShow
 		$options =& ParserOptions::newFromUser( $wgUser );
 		$fileParser = new Parser;
 		
-		$fileParser->setHook( 'slidy','ceFakeSlidy' );
+        $lupchi = array();
+        $fileParser->setHook( 'slidy', 'ceFakeSlidy');
 		$nt = & Title::newFromText( $this->sTitle );
 
 		foreach( $this->mSlidys as $slidy ){
@@ -177,13 +174,28 @@ class slidyShow
 			} //<--} else {
 		} //<--foreach( $this->mSlidys as $slidy ){
 		
+
 		$output =& $fileParser->parse($this->desc."\n__NOTOC__\n__NOEDITSECTION__", $nt, $options);
 		$desc = $output->getText();
 
 		#write to file
-		$ce_page_search = array( '[desc]', '[slidyContent]', '[slidyTitle]', '[slidyStyle]','[slidyAuthor]' );
-		$ce_page_replace= array( $desc, $fc, $this->sTitle, $this->style, $this->author );
-		$fileContent = str_replace($ce_page_search, $ce_page_replace, $ce_slidy_tpl);
+		$page_search = array( '[desc]', '[slidyContent]', '[slidyTitle]', '[slidyStyle]');
+		$page_replace= array( $desc, $fc, $this->sTitle, $this->style);
+
+        $slidy_args = $fileParser->slidy_args;
+
+        # Fill in some default tags
+        if (!isset( $slidy_args["copyright"] ) ) { $slidy_args["copyright"] = ""; }
+
+
+        # Fill in all template arguments given in the slidy tag
+        foreach(array_keys($slidy_args) as $key) {
+            $k = ucfirst($key);
+            array_push($page_search, "[slidy$k]");
+            array_push($page_replace, $slidy_args[$key]);
+        }
+        
+		$fileContent = str_replace($page_search, $page_replace, $slidy_tpl);
 		$fileContent = $wgContLang->Convert($fileContent);
 
 		$wgOut->disable();
@@ -193,6 +205,10 @@ class slidyShow
 
 }
 
-function ceFakeSlidy(){}
+// This function parses the slide variable when actually parsing the slides. It is
+// then passes the arguments for later.
+function ceFakeSlidy($input, array $args, Parser $parser, PPFrame $frame) {
+  $parser->slidy_args = $args;
+}
 
 ?>
