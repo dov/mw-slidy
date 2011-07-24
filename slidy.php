@@ -155,7 +155,8 @@ class slidyShow
 					$slidyContent = str_replace('<ol>', '<ol class="incremental">', $slidyContent);
 					$title = str_replace(SLIDY_INC_MARK, '', $title);
 				}
-				$fc .= sprintf($s, $title, $slidyContent);
+                // Get rid of leading <p><br /></p>
+				$fc .= sprintf($s, $title, "$slidyContent");
 			} else {
 //				$ms = explode( SLIDY_PAGE_BREAK, $slidy['content'] );
 				$ms = preg_split( '/'.SLIDY_PAGE_BREAK.'$/mi', $slidy['content'] );
@@ -192,6 +193,7 @@ class slidyShow
         foreach(array_keys($slidy_args) as $key) {
             $k = ucfirst($key);
             array_push($page_search, "[slidy$k]");
+            print "page_search = " + join(" ",$page_search);
             array_push($page_replace, $slidy_args[$key]);
         }
         
