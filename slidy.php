@@ -33,6 +33,12 @@ define( 'SLIDY_INC_MARK', 	'(step)' );
 define( 'SLIDY_PAGE_BREAK', '\\\\\\\\' );
 $slidy_tpl_file 	= "./extensions/mw-slidy/slidy.htm";
 
+$wgExtensionCredits['validextensionclass'][] = array(
+       'name' => 'mw-slidy',
+       'author' =>'Dov Grobgeld <dov.grobgeld@gmail.com>', 
+       'url' => 'https://github.com/dov/mw-slidy', 
+       'description' => 'View mediawiki pages as HTML slidy slide shows'
+       ); 
 $wgExtensionFunctions[] = 'setupSlidyShow';
 
 function setupSlidyShow() {
@@ -187,6 +193,8 @@ class slidyShow
 
         # Fill in some default tags
         if (!isset( $slidy_args["copyright"] ) ) { $slidy_args["copyright"] = ""; }
+        # Fill in some default tags
+        if (!isset( $slidy_args["theme"] ) ) { $slidy_args["theme"] = "mediawiki"; }
 
 
         # Fill in all template arguments given in the slidy tag

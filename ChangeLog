@@ -1,0 +1,5 @@
+2011-07-26  Dov Grobgeld  <dov.grobgeld@gmail.com>
+
+        * slidy.php : Made the mediawiki theme the default if no other theme was given.
+
+

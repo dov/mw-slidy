@@ -34,5 +34,5 @@ Themes are available in the <tt>themes/</tt> sub directory. To create your own t
 
 == Asking for contributions ==
 
-*Please* send me your modified themes, and I will be happy to include them into future versions!
+<b>Please</b> send me your modified themes, and I will be happy to include them into future versions!
 
