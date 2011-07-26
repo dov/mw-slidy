@@ -1,9 +1,9 @@
 == Version ==
 
-mw-slidy v0.1   
-Dov Grobgeld
-dov.grobgeld@gmail.com
-Tuesday 2011-07-26 21:15 
+mw-slidy v0.1   <br/>
+Dov Grobgeld<br/>
+dov.grobgeld@gmail.com<br/>
+Tuesday 2011-07-26 21:15 <br/>
 
 == Introduction ==
 
