@@ -1,17 +1,36 @@
-                        mw-slidy v0.1   
-                        Dov Grobgeld
-                    dov.grobgeld@gmail.com                       
+== Version ==
 
+mw-slidy v0.1   
+Dov Grobgeld
+dov.grobgeld@gmail.com
+Tuesday 2011-07-26 21:15 
 
-mw-slidy provides a system for creating a HTML-slidy slideshows (http://www.w3.org/Talks/Tools/Slidy2/Overview.html#%281%29 ) as a MediaWiki extension.
+== Introduction ==
 
-Usage:
+mw-slidy provides a system for creating a [[http://www.w3.org/Talks/Tools/Slidy2/Overview.html#%281%29 HTML-slidy slideshow]] as a MediaWiki extension. The code is based on the [[http://meta.wikimedia.org/wiki/User:BR/use_S5_slide_system_in_the_mediawiki/en S5 slide system in MediaWiki]] extension.
 
-In the beginning of the slideshow add the text
+== Usage ==
+
+In the beginning of the page to be used for a slidy show, simply add the text
 
   <slidy/>
 
-this will add a right-aligned label that when pressed shows the page as a html-slideshow. 
+this will add a right-aligned label when viewed as a normal mediawiki page. When the label is pressed, a new html is opened that shows the contents as a HTML slidy slide show.
 
 Each level 2 mediawiki title is converted into a new slide.
+
+== Themes ==
+
+To change the default theme, use the "theme keyword". E.g. to use the w3c theme, add:
+
+  <slidy
+  theme="w3c" />
+
+== Building your own theme ==
+
+Themes are available in the <tt>themes/</tt> sub directory. To create your own theme, simply copy one of the existing themes, and change the CSS to your fancies.
+
+== Asking for contributions ==
+
+*Please* send me your modified themes, and I will be happy to include them into future versions!
 
