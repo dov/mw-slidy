@@ -64,10 +64,9 @@ function renderSlidy( $style = 'default',$args = null, $parser = null ) {
 
  	global $wgTitle, $wgScriptPath;
 
-    print "wgTitle<br/>\n";
 	if(is_object($wgTitle)){
         $slidyShow = new slidyShow($wgTitle, $style, $args);
-		$url = $wgTitle->escapeLocalURL("style=$style&slidy=true");
+		$url = htmlspecialchars($wgTitle->getLocalURL("style=$style&slidy=true"));
 		return '<div class="floatright"><span>
 				<a href="'.$url.'" class="image" title="Slidy Show" target="_blank">
 				<br />
