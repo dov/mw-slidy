@@ -53,7 +53,7 @@ function setupSlidyShow() {
 	$slidy_style	= $wgRequest->getText('style', false);
 
 	if($slidy){
-		$ceTitle =& Title::newFromURL($slidy_title);
+		$ceTitle = Title::newFromURL($slidy_title);
 		$slidyShow = new slidyShow($ceTitle, $slidy_style);
 
 		$slidyShow->genSlidyFile();
@@ -84,7 +84,7 @@ class slidyShow
  	var $mSlidys;
  	var $ts;
 
-	function slidyShow($slidyTitle, $style = 'default', $args = null){
+	function __construct($slidyTitle, $style = 'default', $args = null){
 		
 		if(is_object($slidyTitle)){
 		 	$this->sTitle = $slidyTitle->getFullText();
@@ -139,12 +139,12 @@ class slidyShow
 		$fc = '';
 		$s = "<div class=\"slide\"><h1>%s</h1>%s</div>\n";
 
-		$options =& ParserOptions::newFromUser( $wgUser );
+		$options = ParserOptions::newFromUser( $wgUser );
 		$fileParser = new Parser;
 		
         $lupchi = array();
         $fileParser->setHook( 'slidy', 'ceFakeSlidy');
-		$nt = & Title::newFromText( $this->sTitle );
+		$nt = Title::newFromText( $this->sTitle );
 
 		foreach( $this->mSlidys as $slidy ){
 			
@@ -153,7 +153,7 @@ class slidyShow
 //			if( ! preg_match( '/^'.SLIDY_PAGE_BREAK.'/mi', $slidy['content']) ){
 			if( ! preg_match( '/'.SLIDY_PAGE_BREAK.'$/mi', $slidy['content']) ){
 //			if( ! strpos( $slidy['content'], SLIDY_PAGE_BREAK ) ){
-				$output =& $fileParser->parse($slidy['content']."\n__NOTOC__\n__NOEDITSECTION__", $nt, $options);
+				$output = $fileParser->parse($slidy['content']."\n__NOTOC__\n__NOEDITSECTION__", $nt, $options);
 				$slidyContent = $output->getText();
 				if(strpos($title, SLIDY_INC_MARK)){
 					$slidyContent = str_replace('<ul>', '<ul class="incremental">', $slidyContent);
@@ -168,7 +168,7 @@ class slidyShow
 				$sc = count($ms);
 				foreach( $ms as $i=>$ss ){
 					$title = $slidy['title'] . " (".($i+1)."/$sc)";
-					$output =& $fileParser->parse($ss."\n__NOTOC__\n__NOEDITSECTION__", $nt, $options);
+					$output = $fileParser->parse($ss."\n__NOTOC__\n__NOEDITSECTION__", $nt, $options);
 					$slidyContent = $output->getText();
 					if(strpos($title, SLIDY_INC_MARK)){
 						$slidyContent = str_replace('<ul>', '<ul class="incremental">', $slidyContent);
@@ -181,7 +181,7 @@ class slidyShow
 		} //<--foreach( $this->mSlidys as $slidy ){
 		
 
-		$output =& $fileParser->parse($this->desc."\n__NOTOC__\n__NOEDITSECTION__", $nt, $options);
+		$output = $fileParser->parse($this->desc."\n__NOTOC__\n__NOEDITSECTION__", $nt, $options);
 		$desc = $output->getText();
 
 		#write to file
